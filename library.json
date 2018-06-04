@@ -1,0 +1,22 @@
+{
+    "name": "semver_espidf",
+    "keywords": "semver, c++, c, esp-idf",
+    "description": "A C library and C++ class for using semver in ESP32 IDF",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/infincia/semver_espidf.git"
+    },
+    "authors":
+    [
+      {
+        "name": "Stephen Oliver",
+        "email": "steve@infincia.com",
+        "url": "https://infincia.com",
+        "maintainer": true
+      }
+    ],
+    "version": "0.1.0",
+    "frameworks": "espidf",
+    "platforms": "espressif32"
+  }
