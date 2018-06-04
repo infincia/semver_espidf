@@ -2,8 +2,6 @@
 
 A semver library packaged as an ESP IDF component for ESP32.
 
-Note: the C++ class is not merged yet
-
 ### Installation
 
 #### ESP-IDF build system
@@ -34,9 +32,10 @@ This is a bare minimum `main.cpp` file you can refer to when using this library.
     #include <esp_log.h>
     static const char *TAG = "[MyProject]";
 
-    #include <c_semver.h>
+    #include <Semver.hpp>
 
-    static char* VERSION = "1.0.0";
+    static char* CURRENT_VERSION = "1.1.0";
+    static char* AVAILABLE_VERSION = "1.2.0";
 
     extern "C" {
     void app_main();
@@ -44,23 +43,14 @@ This is a bare minimum `main.cpp` file you can refer to when using this library.
 
     int app_main() {
 
-        struct semver_context current_version;
+        Semver current_version(CURRENT_VERSION);
+        Semver available_version(AVAILABLE_VERSION);
 
-        int32_t cres;
-
-        semver_init(&current_version, VERSION);
-
-        cres = semver_parse(&current_version);
-
-        if (cres != SEMVER_PARSE_OK) {
-            ESP_LOGI(TAG, "current_version check failed: %d", cres);
-            semver_free(&current_version);
-            return 1;
+        if (available_version > current_version) {
+            ESP_LOGI(TAG, "update available: %s", AVAILABLE_VERSION);
+        } else {
+            ESP_LOGI(TAG, "no update available");
         }
-
-        printf("major = %d, minor = %d, patch = %d\n", current_version.major, current_version.minor, current_version.patch);
-
-        // do something 
 
         return 0;
     }
