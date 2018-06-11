@@ -20,6 +20,14 @@ Semver::Semver(const std::string &version)
     }
 }
 
+std::string Semver::string() {
+    char s[64];
+
+    snprintf(s, sizeof(s), "%d.%d.%d", _version.major, _version.minor, _version.patch);
+
+    return std::string(s);
+}
+
 Semver::~Semver() {
     ESP_LOGD(TAG, "~Semver(%p)", static_cast<void *>(this));
     semver_free(&_version);

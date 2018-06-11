@@ -17,6 +17,8 @@ class Semver {
     Semver(const std::string &version);
     virtual ~Semver();
 
+    std::string string();
+
     inline bool operator <(const Semver& rhs) const& {
         return _version.major < rhs._version.major && _version.minor < rhs._version.minor && _version.patch < rhs._version.patch;
     }
