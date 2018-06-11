@@ -21,9 +21,12 @@ class Semver {
     std::string string();
 
     inline bool operator <(const Semver& rhs) const& {
+        bool compare_pre = _version.is_prerelease || rhs._version.is_prerelease;
+
         return _version.major < rhs._version.major || 
                _version.minor < rhs._version.minor || 
-               _version.patch < rhs._version.patch;
+               _version.patch < rhs._version.patch ||
+               (compare_pre ? (strcmp(_version.prerelease, rhs._version.prerelease) < 0) : false);
     }
 
     inline bool operator >(const Semver& rhs) const& {
@@ -31,7 +34,12 @@ class Semver {
     }
 
     inline bool operator ==(const Semver& rhs) const& {
-        return _version.major == rhs._version.major && _version.minor == rhs._version.minor && _version.patch == rhs._version.patch;
+        bool compare_pre = _version.is_prerelease || rhs._version.is_prerelease;
+
+        return _version.major == rhs._version.major && 
+               _version.minor == rhs._version.minor && 
+               _version.patch == rhs._version.patch &&
+               (compare_pre ? (strcmp(_version.prerelease, rhs._version.prerelease) == 0) : true);
     }
 
     inline bool operator >=(const Semver& rhs) const& {
