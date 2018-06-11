@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <cstring>
 #include <utility>
 #include <exception>
 #include <stdexcept>
@@ -20,7 +21,9 @@ class Semver {
     std::string string();
 
     inline bool operator <(const Semver& rhs) const& {
-        return _version.major < rhs._version.major && _version.minor < rhs._version.minor && _version.patch < rhs._version.patch;
+        return _version.major < rhs._version.major || 
+               _version.minor < rhs._version.minor || 
+               _version.patch < rhs._version.patch;
     }
 
     inline bool operator >(const Semver& rhs) const& {
