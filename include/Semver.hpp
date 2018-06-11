@@ -21,8 +21,6 @@ class Semver {
     std::string string();
 
     inline bool operator !=(const Semver& rhs) const& {
-        bool compare_pre = _version.is_prerelease || rhs._version.is_prerelease;
-
         return !(*this == rhs);
     }
 
