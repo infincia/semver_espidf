@@ -1,6 +1,16 @@
 #include "Semver.hpp"
 
+
+#ifdef ESP32
 #include <esp_log.h>
+#else
+#ifdef DEBUG
+#define ESP_LOGD printf
+#else
+#define ESP_LOGD
+#endif
+#endif
+
 
 static const char *TAG = "Semver";
 
