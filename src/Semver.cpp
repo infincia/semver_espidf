@@ -5,9 +5,9 @@
 #include <esp_log.h>
 #else
 #ifdef DEBUG
-#define ESP_LOGD printf
+#define ESP_LOGD( tag, format, ... ) printf( tag, format, ##__VA_ARGS__ )
 #else
-#define ESP_LOGD
+#define ESP_LOGD( tag, format, ... )
 #endif
 #endif
 
