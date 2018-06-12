@@ -25,12 +25,29 @@ class Semver {
     }
 
     inline bool operator <(const Semver& rhs) const& {
-        bool compare_pre = _version.is_prerelease || rhs._version.is_prerelease;
+        bool pre_cmp = (rhs._version.is_prerelease && _version.is_prerelease);
 
-        return _version.major < rhs._version.major || 
-               _version.minor < rhs._version.minor || 
+        // prereleases are always considered less than normal releases, so assign numeric
+        // values to compare in case only one of them is a prerelease
+        int lhs_pre = 1;        
+        if (_version.is_prerelease) {
+            lhs_pre = 0;
+        }
+
+        int rhs_pre = 1;
+        if (rhs._version.is_prerelease) {
+            rhs_pre = 0;
+        }
+
+        return _version.major < rhs._version.major ||
+               _version.minor < rhs._version.minor ||
                _version.patch < rhs._version.patch ||
-               (compare_pre ? (strcmp(_version.prerelease, rhs._version.prerelease) < 0) : false);
+                // if both are prereleases we compare the strings, otherwise we skip it to avoid
+                // dereferencing a NULL pointer.
+                //
+                // if only one of them is a prerelease we always treat that one as lower 
+                // regardless of the prerelease value itself
+               (pre_cmp ? (strcmp(_version.prerelease, rhs._version.prerelease) < 0) : (lhs_pre < rhs_pre));
     }
 
     inline bool operator >(const Semver& rhs) const& {
@@ -38,12 +55,29 @@ class Semver {
     }
 
     inline bool operator ==(const Semver& rhs) const& {
-        bool compare_pre = _version.is_prerelease || rhs._version.is_prerelease;
+        bool pre_cmp = (rhs._version.is_prerelease && _version.is_prerelease);
 
+        // prereleases are always considered less than normal releases, so assign numeric
+        // values to compare in case only one of them is a prerelease
+        int lhs_pre = 1;        
+        if (_version.is_prerelease) {
+            lhs_pre = 0;
+        }
+
+        int rhs_pre = 1;
+        if (rhs._version.is_prerelease) {
+            rhs_pre = 0;
+        }
+        
         return _version.major == rhs._version.major && 
                _version.minor == rhs._version.minor && 
                _version.patch == rhs._version.patch &&
-               (compare_pre ? (strcmp(_version.prerelease, rhs._version.prerelease) == 0) : true);
+                // if both are prereleases we compare the strings, otherwise we skip it to avoid
+                // dereferencing a NULL pointer.
+                //
+                // if they are not both prereleases, the only time lhs_pre and rhs_pre will be equal
+                // is if they are both zero
+               (pre_cmp ? (strcmp(_version.prerelease, rhs._version.prerelease) == 0) : (lhs_pre == rhs_pre));
     }
 
     inline bool operator >=(const Semver& rhs) const& {
