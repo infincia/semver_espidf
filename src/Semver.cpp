@@ -1,5 +1,7 @@
 #include "Semver.hpp"
 
+#include <sstream>
+
 
 #ifdef ESP32
 #include <esp_log.h>
@@ -31,11 +33,19 @@ Semver::Semver(const std::string &version)
 }
 
 std::string Semver::string() {
-    char s[64];
+    std::stringbuf strbuf;
+    std::ostream os(&strbuf);
+    os << _version.major;
+    os << ".";
+    os << _version.minor;
+    os << ".";
+    os << _version.patch;
 
-    snprintf(s, sizeof(s), "%d.%d.%d", _version.major, _version.minor, _version.patch);
-
-    return std::string(s);
+    if (_version.is_prerelease) {
+        os << "-";
+        os << _version.prerelease;
+    }
+    return strbuf.str();
 }
 
 Semver::~Semver() {
